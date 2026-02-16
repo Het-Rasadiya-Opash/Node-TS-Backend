@@ -7,7 +7,7 @@ export const getProducts = async ({
   company = "",
   featured = "",
   sort = "",
-} = {}) => {
+}) => {
   const params = new URLSearchParams();
 
   params.append("page", page.toString());
