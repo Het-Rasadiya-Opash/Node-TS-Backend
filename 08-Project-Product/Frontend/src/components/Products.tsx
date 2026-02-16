@@ -1,11 +1,4 @@
-interface Product {
-  _id: string;
-  name: string;
-  company: string;
-  price: number;
-  rating?: number;
-  featured: boolean;
-}
+import type { Product } from "../types/product";
 
 const Products = ({ products }: { products: Product[] }) => {
   return (

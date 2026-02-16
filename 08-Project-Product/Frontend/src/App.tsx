@@ -1,14 +1,8 @@
 import { useEffect, useState } from "react";
 import { getProducts } from "./services/apiService";
 import Products from "./components/Products";
-interface Product {
-  _id: string;
-  name: string;
-  company: string;
-  price: number;
-  rating?: number;
-  featured: boolean;
-}
+import type { Product } from "./types/product";
+
 const App = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [page, setPage] = useState(1);
