@@ -22,3 +22,17 @@ export const getProducts = async ({
   );
   return res.data.data;
 };
+
+export const createProduct = async (productData: {
+  name: string;
+  company: string;
+  price: string;
+  featured?: boolean;
+  rating?: string;
+}) => {
+  const res = await axios.post(
+    "http://localhost:3000/products/create",
+    productData,
+  );
+  return res.data;
+};

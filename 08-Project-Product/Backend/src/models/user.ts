@@ -1,24 +1,9 @@
 import mongoose, { Document, Schema } from "mongoose";
 import jwt, { type SignOptions } from "jsonwebtoken";
 import bcrypt from "bcrypt";
-type Role = "Admin" | "User";
+import type { JwtPayloadType, UserType } from "../types/type.js";
 
-interface JwtPayload {
-  _id: string;
-  email: string;
-  name: string;
-}
-
-interface User {
-  name: string;
-  email: string;
-  password: string;
-  role: Role;
-  isPasswordCorrect(password: string): Promise<boolean>;
-  generateToken(): string;
-}
-
-type UserDocument = Document & User;
+type UserDocument = Document & UserType;
 
 const userSchema: Schema<UserDocument> = new Schema<UserDocument>({
   name: {
@@ -55,10 +40,11 @@ userSchema.methods.isPasswordCorrect = async function (
 };
 
 userSchema.methods.generateToken = function (): string {
-  const payload: JwtPayload = {
+  const payload: JwtPayloadType = {
     _id: this._id.toString(),
     email: this.email,
     name: this.name,
+    role: this.role,
   };
 
   return jwt.sign(payload, "secret");

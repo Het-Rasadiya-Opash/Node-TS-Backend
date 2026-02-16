@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getProducts } from "../services/apiService";
-import type { Product } from "../types/product";
+import { getProducts } from "../services/productAPIService";
+import type { Product } from "../types/types";
 import Products from "./Products";
 
 const Search = () => {

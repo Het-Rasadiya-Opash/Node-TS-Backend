@@ -1,8 +1,10 @@
-import type { Request, Response } from "express";
+import type { Response } from "express";
+import type { RequestWithUser } from "../middlewares/verifyToken.js";
 import User from "../models/user.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
+import type { Request } from "express";
 
 export const registerUser = asyncHandler(
   async (req: Request, res: Response) => {
@@ -78,4 +80,23 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
         "User logged in successfully",
       ),
     );
+});
+
+export const logoutUser = asyncHandler(async (req: Request, res: Response) => {
+  return res
+    .status(200)
+    .clearCookie("token")
+    .json(new ApiResponse(200, {}, "User logged out successfully"));
+});
+
+export const getUser = asyncHandler(async (req: RequestWithUser, res: Response) => {
+  const user = await User.findById(req.user?._id).select("-password");
+  
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+  
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "User fetched successfully"));
 });

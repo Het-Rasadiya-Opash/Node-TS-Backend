@@ -3,36 +3,7 @@ import Product from "../models/product.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
-
-interface SearchQuery {
-  company?: string;
-  name?: string;
-  featured?: string;
-  sort?: string;
-  select?: string;
-  page?: string;
-  limit?: string;
-}
-
-export const getAllProducts = asyncHandler(
-  async (req: Request, res: Response) => {
-    try {
-      const totalProducts = await Product.countDocuments();
-      const products = await Product.find({});
-      res
-        .status(200)
-        .json(
-          new ApiResponse(
-            200,
-            { products, totalProducts },
-            "All Product Fetch",
-          ),
-        );
-    } catch (error) {
-      throw new ApiError(500, "Internal Error");
-    }
-  },
-);
+import type { SearchQuery } from "../types/type.js";
 
 export const searchProduct = asyncHandler(
   async (req: Request<{}, {}, {}, SearchQuery>, res: Response) => {
@@ -77,5 +48,31 @@ export const searchProduct = asyncHandler(
     } catch (error) {
       throw new ApiError(400, "Error in Search Product");
     }
+  },
+);
+
+export const createProduct = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { name, company, price, featured, rating } = req.body;
+
+    if (!name || !price) {
+      throw new ApiError(400, "Name and Price are required");
+    }
+
+    const product = await Product.create({
+      name,
+      company,
+      price,
+      featured,
+      rating,
+    });
+
+    if (!product) {
+      throw new ApiError(500, "Failed to create product in database");
+    }
+
+    return res
+      .status(201)
+      .json(new ApiResponse(201, product, "Product Created Successfully"));
   },
 );
