@@ -37,6 +37,8 @@ const App = () => {
     setPage(1);
   };
 
+  
+
   const totalPages = Math.ceil(totalFetchProducts / limit);
 
   return (
